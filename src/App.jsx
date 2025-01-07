@@ -1,14 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import CodeEditor from "./components/CodeEditor";
 import Preview from "./components/Preview";
 import Console from "./components/Console";
+import useLocalStorage from "./hooks/useLocalStorage";
 import "./styles/global.css";
 
 const App = () => {
-  const [html, setHtml] = useState("");
-  const [css, setCss] = useState("");
-  const [js, setJs] = useState("");
+  const [html, setHtml] = useLocalStorage("html", "");
+  const [css, setCss] = useLocalStorage("css", "");
+  const [js, setJs] = useLocalStorage("js", "");
   const [logs, setLogs] = useState([]);
 
   const srcDoc = `
@@ -29,6 +30,16 @@ const App = () => {
       </body>
     </html>
   `;
+
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.data.type === "log") {
+        setLogs((prevLogs) => [...prevLogs, event.data.message]);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
 
   return (
     <div className="app">
