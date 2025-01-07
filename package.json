@@ -11,6 +11,7 @@
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
     "react-simple-code-editor": "^0.14.1",
+    "react-split": "^2.0.14",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
