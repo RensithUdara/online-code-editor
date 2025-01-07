@@ -6,6 +6,7 @@
     "cra-template": "1.2.0",
     "online-code-editor": "file:",
     "prism-themes": "^1.9.0",
+    "prismjs": "^1.29.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
