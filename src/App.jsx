@@ -11,6 +11,7 @@ const App = () => {
   const [css, setCss] = useLocalStorage("css", "");
   const [js, setJs] = useLocalStorage("js", "");
   const [logs, setLogs] = useState([]);
+  const [theme, setTheme] = useLocalStorage("theme", "light");
 
   const srcDoc = `
     <html>
@@ -21,11 +22,23 @@ const App = () => {
         ${html}
         <script>
           const originalConsoleLog = console.log;
+          const originalConsoleError = console.error;
+          
           console.log = (...args) => {
             window.parent.postMessage({ type: "log", message: args.join(" ") }, "*");
             originalConsoleLog(...args);
           };
-          ${js}
+          
+          console.error = (...args) => {
+            window.parent.postMessage({ type: "error", message: args.join(" ") }, "*");
+            originalConsoleError(...args);
+          };
+          
+          try {
+            ${js}
+          } catch (error) {
+            console.error(error);
+          }
         </script>
       </body>
     </html>
@@ -33,22 +46,30 @@ const App = () => {
 
   useEffect(() => {
     const handleMessage = (event) => {
-      if (event.data.type === "log") {
-        setLogs((prevLogs) => [...prevLogs, event.data.message]);
+      if (event.data.type === "log" || event.data.type === "error") {
+        setLogs((prevLogs) => [...prevLogs, { type: event.data.type, message: event.data.message }]);
       }
     };
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
+  const clearLogs = () => {
+    setLogs([]);
+  };
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  };
+
   return (
-    <div className="app">
-      <Header setHtml={setHtml} setCss={setCss} setJs={setJs} />
+    <div className={`app ${theme}`}>
+      <Header setHtml={setHtml} setCss={setCss} setJs={setJs} toggleTheme={toggleTheme} theme={theme} />
       <div className="main">
-        <CodeEditor html={html} setHtml={setHtml} css={css} setCss={setCss} js={js} setJs={setJs} />
+        <CodeEditor html={html} setHtml={setHtml} css={css} setCss={setCss} js={js} setJs={setJs} theme={theme} />
         <Preview srcDoc={srcDoc} />
       </div>
-      <Console logs={logs} setLogs={setLogs} />
+      <Console logs={logs} clearLogs={clearLogs} theme={theme} />
     </div>
   );
 };
