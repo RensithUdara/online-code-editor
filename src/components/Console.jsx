@@ -1,24 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "../styles/console.css";
 
 const Console = ({ logs, setLogs }) => {
+  const consoleEndRef = useRef(null);
+
+  // Auto-scroll to the bottom when logs change
+  useEffect(() => {
+    if (consoleEndRef.current) {
+      consoleEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [logs]);
+
+  // Handle incoming messages
   useEffect(() => {
     const handleMessage = (event) => {
       if (event.data.type === "log") {
-        setLogs((prevLogs) => [...prevLogs, event.data.message]);
+        const timestamp = new Date().toLocaleTimeString();
+        const logMessage = `[${timestamp}] ${event.data.message}`;
+        setLogs((prevLogs) => [...prevLogs, logMessage]);
       }
     };
+
     window.addEventListener("message", handleMessage);
     return () => window.removeEventListener("message", handleMessage);
   }, [setLogs]);
 
+  // Clear logs
+  const clearLogs = () => {
+    setLogs([]);
+  };
+
   return (
     <div className="console">
-      <h3>Console</h3>
+      <div className="console-header">
+        <h3>Console</h3>
+        <button onClick={clearLogs} className="clear-button">
+          Clear
+        </button>
+      </div>
       <div className="console-output">
-        {logs.map((log, index) => (
-          <div key={index}>{log}</div>
-        ))}
+        {Array.isArray(logs) &&
+          logs.map((log, index) => (
+            <div key={index} className="log-message">
+              {log}
+            </div>
+          ))}
+        <div ref={consoleEndRef} />
       </div>
     </div>
   );
