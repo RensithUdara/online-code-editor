@@ -1,12 +1,82 @@
 .console {
-    padding: 10px;
-    background-color: #1e1e1e;
-    color: #fff;
-    font-family: monospace;
-    height: 200px;
-    overflow: auto;
-  }
-  
-  .console-output {
-    white-space: pre-wrap;
-  }
+  padding: 10px;
+  background-color: #1e1e1e; /* Dark background for a console-like feel */
+  color: #fff; /* White text for contrast */
+  font-family: monospace; /* Monospace font for a code-like appearance */
+  height: 200px; /* Fixed height */
+  overflow: auto; /* Enable scrolling */
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+}
+
+.console-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #444; /* Separator line */
+}
+
+.console-header h3 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+}
+
+.clear-button {
+  background-color: #ff4444; /* Red button for clear action */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.clear-button:hover {
+  background-color: #cc0000; /* Darker red on hover */
+}
+
+.console-output {
+  white-space: pre-wrap; /* Preserve formatting and wrap text */
+  line-height: 1.5; /* Improve readability */
+}
+
+.log-message {
+  margin-bottom: 5px;
+  padding: 3px 0;
+  color: #fff; /* Default log color */
+}
+
+.log-message.info {
+  color: #4caf50; /* Green for informational logs */
+}
+
+.log-message.warn {
+  color: #ff9800; /* Orange for warnings */
+}
+
+.log-message.error {
+  color: #f44336; /* Red for errors */
+}
+
+/* Scrollbar styling */
+.console::-webkit-scrollbar {
+  width: 8px;
+}
+
+.console::-webkit-scrollbar-track {
+  background: #2e2e2e; /* Dark track */
+  border-radius: 4px;
+}
+
+.console::-webkit-scrollbar-thumb {
+  background: #555; /* Scrollbar handle */
+  border-radius: 4px;
+}
+
+.console::-webkit-scrollbar-thumb:hover {
+  background: #777; /* Lighter handle on hover */
+}
